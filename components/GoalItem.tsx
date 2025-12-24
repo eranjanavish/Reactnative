@@ -1,18 +1,30 @@
-import { View, Text, FlatList, StyleSheet } from 'react-native'
+import { View, Text, FlatList, StyleSheet,Pressable, } from 'react-native'
 import React from 'react'
 
 interface props{
-    goals : string[];
+    goals : Array<{item:string,id:string}>;
+    deleteitem : (id:string)=>void;
 }
 
-const GoalItem = ({goals}:props) => {
+const GoalItem = ({goals,deleteitem}:props) => {
+        
   return (
+    
     <FlatList style={styles.two} showsVerticalScrollIndicator={true} 
           data={goals} renderItem={(itemData)=>{
-            return (<Text style={styles.goalitem}>{itemData.item}</Text>)
-          }} >
-      
+            return (
+                
+            <Pressable onPress={() => deleteitem(itemData.item.id)} 
+            style={({pressed})=> pressed && styles.press}
+            >
+                <Text style={styles.goalitem} >{itemData.item.item}</Text>
+                </Pressable>
+                )
+          }}
+          keyExtractor={(item)=>{return item.id}} >
+            
           </FlatList>
+          
   )
 }
 const styles = StyleSheet.create({
@@ -31,6 +43,9 @@ const styles = StyleSheet.create({
         margin:10,
         borderRadius:10
     
+      },
+      press: {
+        backgroundColor:"grey",
       }
 
 })

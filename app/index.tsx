@@ -6,32 +6,33 @@ import GoalInput from '@/components/GoalInput';
 
 
 export default function Index() {
-
-  const [note,setNote] = React.useState("");
-  const [list,setList] = React.useState<string[]>([]);
+  const [list,setList] = React.useState<Array<{item:string,id:string}>>([]);
+  const [modalstate,setModalState] = React.useState(false);
 
   const Add = (note:string)=>{
     console.log(note);
-    setList((prev)=>([...prev,note]));
+    setList((prev)=>([...prev,{item:note,id:Math.random().toString()}]));
     console.log(list)
 
   }
-
-  const pressed = () =>{
-    
+  const Delete = (id:string)=>{
+    setList((prev)=>{
+      return prev.filter((item)=>id!== item.id)
+    })
   }
 
-  const textChange = (enterdText:string) =>{
-    setNote(enterdText)
+  const modalActive = ()=>{
+    setModalState(!modalstate)
   }
+
+
 
   return (
     <View style={styles.container}>
-      <GoalInput buttonPressed={Add}/>
+      <Button onPress={modalActive} color="blue" title="Click Me" />
+      <GoalInput buttonPressed={Add} active={modalstate}/>
       
-      <GoalItem goals={list} />
-      
-      
+      <GoalItem goals={list} deleteitem={Delete} />
     </View>
   );
 }
